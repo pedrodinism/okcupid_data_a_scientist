@@ -1,4 +1,4 @@
-#Project Overview#
+# Project Overview #
 This project tackles a multi-class classification problem using two distinct types of features:
 
 1. Tabular data — categorical and numerical columns
