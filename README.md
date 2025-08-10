@@ -1,44 +1,58 @@
-This project tackles a multi-class classification problem using two different types of features:
+Project Overview
+This project tackles a multi-class classification problem using two distinct types of features:
 
-1. Tabular data (categorical + numerical columns)
-2. Text-free data, where each person wrote several essays about themselves
+Tabular data — categorical and numerical columns
 
-The idea was to train several models with the different data and then stack those models to reach a final output.
+Free-text data — a series of essays written by each person
 
-The first model is achieved with stacking as well, making this a double-stacking approach.
+The core idea is to train separate models for each data type, and then stack them to produce a single final prediction.
+The first model is itself built using stacking, making this a double-stacking approach.
 
-# --- EDA --- #
+Exploratory Data Analysis (EDA)
+The project begins with an exploratory analysis of the dataset.
 
-The first step consists on performing EDA on the dataset. I analyzed the data, handled outliers, missing values and also grouped some categories together, to try to ensure that every class had enough data for the model to learn.
-Also cleaned the free text fields by removing pontuaction, html and stop words (words that are meaningless to the model).
+Outliers and missing values were handled.
 
-# --- Feature engineering --- #
+Some categories were grouped together to ensure that each class had enough examples for the model to learn effectively.
 
-In the second step I created some logic in a way that allows me to predict results for different columns only by changing one variable (col_to_predict).
-After selecting this column:
-- unknown values for the target are removed from the dataset
-- categorical variables are one-hot encoded
-- numerical variables are standardized
+The free-text fields were cleaned by removing punctuation, HTML tags, and stop words (words with little to no predictive value).
 
-# --- Model training --- #
+Feature Engineering
+A flexible setup was created so the target column could be changed simply by modifying a single variable (col_to_predict).
 
-In this step the data is split between train and test datasets and the models are trained.
-The first model is stacked with the following base models:
-- Logistic Regression
-- Random Forest
-- Extra Trees
-- Decision Tree
-- K-Nearest Neighbors
-- XGBoost
+After selecting the target column:
 
-The final estimator is a Logistic Regression model
+Rows with unknown values for the target are removed.
 
-The second model (text-model) is a Multinomial Naive Bayes
+Categorical variables are one-hot encoded.
 
-# --- Final output --- #
+Numerical variables are standardized.
 
-In this phase it is used Logistic Regression to compute the final decision using the outputs from the 2 models
+Model Training
+Model 1 — Tabular Data Stacking
+This is a stacked model with the following base learners:
 
+Logistic Regression
 
+Random Forest
 
+Extra Trees
 
+Decision Tree
+
+K-Nearest Neighbors
+
+XGBoost
+
+The final estimator in the stack is a Logistic Regression model.
+
+Model 2 — Text Classification
+The text model is a pipeline composed of:
+
+CountVectorizer (to transform text into numerical features using a bag-of-words representation)
+
+Multinomial Naive Bayes (the classifier)
+
+Final Output — Double Stacking
+The outputs from the two models (probabilities for each class) are combined into a new dataset of meta-features.
+A Logistic Regression model is then trained on these meta-features to produce the final prediction.
